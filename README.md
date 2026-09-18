@@ -54,15 +54,6 @@ by default — pass `--password yourpassword` to set a different one):
   address, reproduced from the university's official letterhead template)
   for printing/circulation as an official notice.
 
-## Sample data
-
-`sample_data/make_samples.py` generates example `.xlsx` files (including one
-intentionally invalid file) for exercising the upload flows:
-
-```bash
-venv\Scripts\python sample_data\make_samples.py
-```
-
 ## Notes
 
 - Data lives in `db.sqlite3` in the project root — back it up before making
