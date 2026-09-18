@@ -1,0 +1,54 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ exam_term.label }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_terms_list' %}">Exam Terms</a></nav>
+<h1>{{ exam_term.label }} <span class="pill">{{ exam_term.get_kind_display }}</span></h1>
+<p class="muted">{{ exam_term.start_date }} – {{ exam_term.end_date }} · {{ exam_term.students_per_invigilator }} students/invigilator ·
+  {{ exam_term.reserves_per_hall }} reserve(s)/hall · min gap {{ exam_term.min_gap_minutes }} min</p>
+
+<div class="card">
+  <a class="btn" href="{% url 'export_master_schedule' exam_term.pk %}">Export master schedule (PDF)</a>
+  <a class="btn" href="{% url 'export_duty_roster' exam_term.pk %}">Export duty roster (PDF)</a>
+  <a class="btn secondary" href="{% url 'versions_list' exam_term.pk %}">Version history</a>
+  <form method="post" action="{% url 'publish' exam_term.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button class="btn" type="submit">Publish snapshot</button>
+  </form>
+</div>
+
+<h2>Holidays</h2>
+<div class="card">
+  <p><a class="btn small" href="{% url 'holiday_add' exam_term.pk %}">Add holiday</a></p>
+  <table>
+    <tr><th>Date</th><th>Description</th></tr>
+    {% for h in holidays %}<tr><td>{{ h.date }}</td><td>{{ h.description }}</td></tr>{% empty %}<tr><td colspan="2" class="muted">None yet.</td></tr>{% endfor %}
+  </table>
+</div>
+
+<h2>Exam Slots</h2>
+<div class="card">
+  <p><a class="btn small" href="{% url 'slot_add' exam_term.pk %}">Add slot</a></p>
+  <table>
+    <tr><th>Date</th><th>Session</th><th>Time</th></tr>
+    {% for s in slots %}<tr><td>{{ s.date }}</td><td>Session {{ s.session_number }}</td><td>{{ s.start_time }} – {{ s.end_time }}</td></tr>{% empty %}<tr><td colspan="3" class="muted">None yet.</td></tr>{% endfor %}
+  </table>
+</div>
+
+<h2>Exam Schedule</h2>
+<div class="card">
+  <p><a class="btn small" href="{% url 'schedule_add' exam_term.pk %}">Schedule a course</a></p>
+  <table>
+    <tr><th>Date</th><th>Session</th><th>Course</th><th>Halls</th><th></th></tr>
+    {% for sch in schedules %}
+    <tr>
+      <td>{{ sch.exam_slot.date }}</td><td>Session {{ sch.exam_slot.session_number }}</td>
+      <td>{{ sch.course.code }} — {{ sch.course.name }}</td>
+      <td>{% for a in sch.hall_allocations.all %}<span class="pill">{{ a.hall.name }}</span>{% empty %}<span class="muted">none</span>{% endfor %}</td>
+      <td><a class="btn small" href="{% url 'schedule_detail' sch.pk %}">Manage</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="muted">No exams scheduled yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

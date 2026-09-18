@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block title %}Add Exam Slot{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_term_detail' exam_term.pk %}">{{ exam_term.label }}</a></nav>
+<h1>Add Exam Slot — {{ exam_term.label }}</h1>
+
+{% if holiday_warning %}
+<div class="card" style="border-color:#ecd88a;background:#fdf3d6">
+  <p><strong>{{ holiday_warning.date }}</strong> is marked as a holiday ({{ holiday_warning.description }}). Check the box below to schedule on it anyway.</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if holiday_warning %}
+    <p><label><input type="checkbox" name="force" value="1" style="width:auto;display:inline"> Schedule on this holiday anyway</label></p>
+    {% endif %}
+    <button class="btn" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "portal/base.html" %}
+{% block title %}Allocate Hall{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'schedule_detail' schedule.pk %}">{{ schedule }}</a></nav>
+<h1>Allocate Hall — {{ schedule }}</h1>
+<p class="muted">{{ schedule.course.enrollments.count }} student(s) enrolled in {{ schedule.course.code }}</p>
+
+{% if problems %}
+<div class="card" style="border-color:#f0b3ae;background:#fbe4e2">
+  <h2 style="margin-top:0;color:#b3261e">Conflicts detected</h2>
+  <ul>{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>
+  <p>Check the box below to allocate anyway.</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if problems %}
+    <p><label><input type="checkbox" name="force" value="1" style="width:auto;display:inline"> Allocate despite conflicts</label></p>
+    {% endif %}
+    <button class="btn" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

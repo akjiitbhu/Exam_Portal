@@ -1,0 +1,24 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'halls_list' %}">Halls</a></nav>
+<h1>{{ title }}</h1>
+<form method="post">
+  {% csrf_token %}
+  <div class="card">
+    {{ form.as_p }}
+  </div>
+
+  <h2>Bench Types</h2>
+  <p class="muted">A hall can have more than one type of bench — e.g. some seat 3 students, some seat 2, some only 1.
+    Fill in as many rows as this hall needs; leave a row blank (or tick "Delete" on an existing one) if it doesn't apply.</p>
+  {{ formset.management_form }}
+  {% for bgform in formset %}
+  <div class="card">
+    {{ bgform.as_p }}
+  </div>
+  {% endfor %}
+
+  <button class="btn" type="submit">Save</button>
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}
+{% block title %}Add Holiday{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_term_detail' exam_term.pk %}">{{ exam_term.label }}</a></nav>
+<h1>Add Holiday — {{ exam_term.label }}</h1>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

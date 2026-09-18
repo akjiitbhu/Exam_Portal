@@ -1,0 +1,29 @@
+{% extends "portal/base.html" %}
+{% block title %}Schedule an Exam{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_term_detail' exam_term.pk %}">{{ exam_term.label }}</a></nav>
+<h1>Schedule an Exam — {{ exam_term.label }}</h1>
+
+{% if conflicts %}
+<div class="card" style="border-color:#f0b3ae;background:#fbe4e2">
+  <h2 style="margin-top:0;color:#b3261e">Conflicts detected</h2>
+  <ul>
+    {% for c in conflicts %}
+    <li>{{ c.student.enrolment_number }} ({{ c.student.name }}) also has {{ c.other_course.code }} at {{ c.other_slot }}</li>
+    {% endfor %}
+  </ul>
+  <p>Check the box below to schedule anyway.</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if conflicts %}
+    <p><label><input type="checkbox" name="force" value="1" style="width:auto;display:inline"> Schedule despite conflicts</label></p>
+    {% endif %}
+    <button class="btn" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

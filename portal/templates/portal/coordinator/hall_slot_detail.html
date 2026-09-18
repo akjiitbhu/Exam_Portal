@@ -1,0 +1,67 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ hall.name }} — {{ exam_slot }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_term_detail' exam_slot.exam_term.pk %}">{{ exam_slot.exam_term.label }}</a></nav>
+<h1>{{ hall.name }} — {{ exam_slot }}</h1>
+<p class="muted">
+  Courses here:
+  {% for a in allocations %}<span class="pill">{{ a.exam_schedule.course.code }}</span>{% endfor %}
+</p>
+
+<h2>Seating</h2>
+<div class="card">
+  <form method="post" action="{% url 'generate_seating' hall.pk exam_slot.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button class="btn" type="submit">Generate / regenerate seating</button>
+  </form>
+  {% if seat_assignments %}
+  <a class="btn secondary" href="{% url 'export_seating_pdf' hall.pk exam_slot.pk %}">Seating chart (PDF)</a>
+  <a class="btn secondary" href="{% url 'export_attendance_pdf' hall.pk exam_slot.pk %}">Attendance sheet (PDF)</a>
+  {% endif %}
+
+  {% if seat_assignments %}
+  {% for group in seat_grid %}
+  <p style="margin:10px 0 4px"><strong>{{ group.bench_group.label }}</strong></p>
+  <div class="seat-grid">
+    <div class="seat-row">
+      {% for bench in group.benches %}
+      <div class="seat-bench">
+        {% for sa in bench %}
+        {{ sa.student.enrolment_number }} ({{ sa.hall_allocation.exam_schedule.course.code }})<br>
+        {% empty %}-{% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <p class="muted">No seating generated yet.</p>
+  {% endif %}
+</div>
+
+<h2>Invigilation Duties</h2>
+<div class="card">
+  <form method="post" action="{% url 'generate_duties' hall.pk exam_slot.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button class="btn" type="submit">Generate / regenerate duties</button>
+  </form>
+  <table>
+    <tr><th>Faculty</th><th>Kind</th><th>Role</th><th>Status</th><th></th></tr>
+    {% for d in duty_list %}
+    <tr>
+      <td>{{ d.faculty.name }}</td><td>{{ d.faculty.get_kind_display }}</td><td>{{ d.get_role_display }}</td><td>{{ d.get_status_display }}</td>
+      <td>
+        {% if d.status != "DROPPED" %}
+        <form method="post" action="{% url 'duty_drop' d.pk %}" style="display:inline">
+          {% csrf_token %}
+          <button class="btn danger small" type="submit">Drop &amp; promote reserve</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="muted">No duties assigned yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

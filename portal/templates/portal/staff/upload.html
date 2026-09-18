@@ -1,0 +1,36 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a></nav>
+<h1>{{ title }}</h1>
+<p class="muted">{{ help_text }}</p>
+
+<div class="card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Validate file</button>
+  </form>
+</div>
+
+{% if result %}
+  {% if result.has_errors %}
+  <div class="card">
+    <h2 style="margin-top:0;color:#b3261e">Fix these before importing ({{ result.errors|length }} error(s))</h2>
+    <ul>
+      {% for error in result.errors %}<li>{{ error }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% elif ready_to_commit %}
+  <div class="card">
+    <h2 style="margin-top:0;color:#1e6b3a">{{ result.valid_count }} row(s) look valid</h2>
+    <p>Nothing has been saved yet. Confirm to import.</p>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="confirm" value="1">
+      <button class="btn" type="submit">Confirm import of {{ result.valid_count }} record(s)</button>
+    </form>
+  </div>
+  {% endif %}
+{% endif %}
+{% endblock %}

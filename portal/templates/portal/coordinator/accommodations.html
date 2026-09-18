@@ -1,0 +1,24 @@
+{% extends "portal/base.html" %}
+{% block title %}Special Accommodations{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a></nav>
+<h1>Special Accommodations</h1>
+<p class="muted">Students flagged here are routed to an accessible hall (ground floor / separate room) whenever seating is generated for a course they're enrolled in.</p>
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Add</button>
+  </form>
+</div>
+
+<table>
+  <tr><th>Student</th><th>Type</th><th>Notes</th></tr>
+  {% for a in accommodations %}
+  <tr><td>{{ a.student.enrolment_number }} — {{ a.student.name }}</td><td>{{ a.get_type_display }}</td><td>{{ a.notes }}</td></tr>
+  {% empty %}
+  <tr><td colspan="3" class="muted">None recorded yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "portal/base.html" %}
+{% block title %}Version History{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_term_detail' exam_term.pk %}">{{ exam_term.label }}</a></nav>
+<h1>Version History — {{ exam_term.label }}</h1>
+<table>
+  <tr><th>Published</th><th>Label</th><th>By</th><th></th></tr>
+  {% for v in versions %}
+  <tr>
+    <td>{{ v.created_at|date:"d M Y H:i" }}</td><td>{{ v.label }}</td><td>{{ v.created_by }}</td>
+    <td>
+      <form method="post" action="{% url 'version_restore' v.pk %}" style="display:inline">
+        {% csrf_token %}
+        <button class="btn secondary small" type="submit">Restore this version</button>
+      </form>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="4" class="muted">No versions published yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

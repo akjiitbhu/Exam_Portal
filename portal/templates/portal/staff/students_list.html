@@ -1,0 +1,15 @@
+{% extends "portal/base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a></nav>
+<h1>Students <span class="pill">{{ students|length }}</span></h1>
+<p><a class="btn" href="{% url 'upload_students' %}">Upload / update students</a></p>
+<table>
+  <tr><th>Enrolment No.</th><th>Name</th><th>Program</th><th>Branch</th><th>Year</th></tr>
+  {% for s in students %}
+  <tr><td>{{ s.enrolment_number }}</td><td>{{ s.name }}</td><td>{{ s.get_program_display }}</td><td>{{ s.get_branch_display }}</td><td>{{ s.year }}</td></tr>
+  {% empty %}
+  <tr><td colspan="5" class="muted">No students yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

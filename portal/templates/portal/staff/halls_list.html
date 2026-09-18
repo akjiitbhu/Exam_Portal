@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block title %}Halls{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a></nav>
+<h1>Examination Halls <span class="pill">{{ halls|length }}</span></h1>
+<p><a class="btn" href="{% url 'hall_add' %}">Add hall</a></p>
+<table>
+  <tr><th>Name</th><th>Building</th><th>Floor</th><th>Bench types</th><th>Max capacity</th><th>Accessible</th><th></th></tr>
+  {% for h in halls %}
+  <tr>
+    <td>{{ h.name }}</td><td>{{ h.building }}</td><td>{{ h.floor }}</td>
+    <td>
+      {% for bg in h.bench_groups.all %}<span class="pill">{{ bg.label }}: {{ bg.bench_count }}×{{ bg.seats_per_bench }}</span> {% empty %}<span class="muted">none set</span>{% endfor %}
+    </td>
+    <td>{{ h.max_capacity }}</td>
+    <td>{% if h.is_accessible %}Yes{% else %}No{% endif %}</td>
+    <td><a class="btn small" href="{% url 'hall_edit' h.pk %}">Edit</a></td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="7" class="muted">No halls yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

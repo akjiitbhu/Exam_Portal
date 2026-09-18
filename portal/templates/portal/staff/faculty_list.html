@@ -1,0 +1,15 @@
+{% extends "portal/base.html" %}
+{% block title %}Faculty{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a></nav>
+<h1>Faculty / Research Scholars <span class="pill">{{ faculty|length }}</span></h1>
+<p><a class="btn" href="{% url 'upload_faculty' %}">Upload / update faculty</a></p>
+<table>
+  <tr><th>Name</th><th>Email</th><th>Kind</th><th>Branch</th><th>Duties so far</th></tr>
+  {% for f in faculty %}
+  <tr><td>{{ f.name }}</td><td>{{ f.email }}</td><td>{{ f.get_kind_display }}</td><td>{{ f.get_branch_display }}</td><td>{{ f.duties.count }}</td></tr>
+  {% empty %}
+  <tr><td colspan="5" class="muted">No faculty yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

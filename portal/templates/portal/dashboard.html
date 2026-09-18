@@ -1,0 +1,24 @@
+{% extends "portal/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="grid">
+  {% if is_staff_role %}
+  <div class="card">
+    <h2 style="margin-top:0">Staff Portal</h2>
+    <p><a class="btn" href="{% url 'courses_list' %}">Courses</a></p>
+    <p><a class="btn" href="{% url 'students_list' %}">Students</a></p>
+    <p><a class="btn" href="{% url 'faculty_list' %}">Faculty / Research Scholars</a></p>
+    <p><a class="btn" href="{% url 'halls_list' %}">Examination Halls</a></p>
+    <p><a class="btn secondary" href="{% url 'upload_course_enrollment' %}">Upload course-wise student list</a></p>
+  </div>
+  {% endif %}
+  {% if is_coordinator %}
+  <div class="card">
+    <h2 style="margin-top:0">Coordinator Portal</h2>
+    <p><a class="btn" href="{% url 'exam_terms_list' %}">Exam Terms &amp; Schedules</a></p>
+    <p><a class="btn secondary" href="{% url 'accommodations_list' %}">Special Accommodations</a></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

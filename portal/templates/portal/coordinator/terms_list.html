@@ -1,0 +1,19 @@
+{% extends "portal/base.html" %}
+{% block title %}Exam Terms{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a></nav>
+<h1>Exam Terms</h1>
+<p><a class="btn" href="{% url 'exam_term_add' %}">New exam term</a></p>
+<table>
+  <tr><th>Label</th><th>Kind</th><th>Dates</th><th>Students/Invigilator</th><th>Reserves/Hall</th><th></th></tr>
+  {% for t in terms %}
+  <tr>
+    <td>{{ t.label }}</td><td>{{ t.get_kind_display }}</td><td>{{ t.start_date }} – {{ t.end_date }}</td>
+    <td>{{ t.students_per_invigilator }}</td><td>{{ t.reserves_per_hall }}</td>
+    <td><a class="btn small" href="{% url 'exam_term_detail' t.pk %}">Open</a></td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6" class="muted">No exam terms yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

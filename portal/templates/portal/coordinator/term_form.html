@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="{% url 'dashboard' %}">Dashboard</a> / <a href="{% url 'exam_terms_list' %}">Exam Terms</a></nav>
+<h1>{{ title }}</h1>
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

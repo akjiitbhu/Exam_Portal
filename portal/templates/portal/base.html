@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}Exam Portal{% endblock %} — JNU SoE</title>
+<style>
+  :root {
+    --primary: #1c3d5a;
+    --accent: #2c6e91;
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --border: #d7dde3;
+    --text: #1f2a33;
+    --danger: #b3261e;
+    --warning: #8a6d00;
+    --success: #1e6b3a;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+  header.top { background: var(--primary); color: #fff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+  header.top a { color: #fff; text-decoration: none; font-weight: 600; }
+  header.top .user-info { font-size: 0.9em; }
+  header.top .user-info a { margin-left: 12px; text-decoration: underline; }
+  nav.crumbs { padding: 8px 24px; font-size: 0.85em; color: #555; }
+  nav.crumbs a { color: var(--accent); text-decoration: none; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px 24px 48px; }
+  h1 { font-size: 1.5em; color: var(--primary); }
+  h2 { font-size: 1.2em; color: var(--primary); margin-top: 28px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; background: var(--card); }
+  th, td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; font-size: 0.92em; }
+  th { background: #eaeef1; }
+  .btn { display: inline-block; background: var(--accent); color: #fff; border: none; padding: 7px 14px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; }
+  .btn:hover { background: var(--primary); }
+  .btn.secondary { background: #6c7a89; }
+  .btn.danger { background: var(--danger); }
+  .btn.small { padding: 3px 8px; font-size: 0.82em; }
+  form p { margin: 8px 0; }
+  label { font-weight: 600; font-size: 0.9em; display: block; margin-bottom: 2px; }
+  input, select, textarea { padding: 6px; border: 1px solid var(--border); border-radius: 4px; width: 100%; max-width: 420px; }
+  .messages { list-style: none; padding: 0; margin: 0 0 16px; }
+  .messages li { padding: 8px 12px; border-radius: 4px; margin-bottom: 6px; font-size: 0.9em; }
+  .messages li.success { background: #e2f3e6; color: var(--success); border: 1px solid #b7ddc0; }
+  .messages li.error { background: #fbe4e2; color: var(--danger); border: 1px solid #f0b3ae; }
+  .messages li.warning { background: #fdf3d6; color: var(--warning); border: 1px solid #ecd88a; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.78em; background: #e0e6eb; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .muted { color: #667; font-size: 0.88em; }
+  .seat-grid { display: inline-block; }
+  .seat-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+  .seat-bench { border: 1px solid var(--border); background: #fff; padding: 4px 6px; font-size: 0.75em; min-width: 90px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="{% url 'dashboard' %}">JNU School of Engineering — Exam Portal</a>
+  {% if user.is_authenticated %}
+  <span class="user-info">Signed in as {{ user.username }}
+    <form method="post" action="{% url 'logout' %}" style="display:inline">
+      {% csrf_token %}
+      <button type="submit" style="background:none;border:none;color:#fff;text-decoration:underline;cursor:pointer;padding:0;margin-left:12px;font-size:inherit;font-family:inherit">Log out</button>
+    </form>
+  </span>
+  {% endif %}
+</header>
+<main>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
